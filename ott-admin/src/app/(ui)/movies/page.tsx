@@ -1,6 +1,5 @@
 import { Button } from '@/components/ui/button';
-import { Table, TableCaption, TableHeader, TableRow, TableHead, TableBody, TableCell, TableFooter } from '@/components/ui/table';
-import { Movie } from '@prisma/client';
+import { Table, TableCaption, TableHeader, TableRow, TableHead, TableBody, TableCell } from '@/components/ui/table';
 import { PlusCircle } from 'lucide-react';
 import Link from 'next/link';
 
@@ -9,6 +8,16 @@ async function getMovies() {
     cache: 'no-store',
   });
   return res.json();
+}
+
+interface Movie {
+  id: number;
+  title: string;
+  description: string;
+  releaseDate: string;
+  genre: {
+    name: string
+  }
 }
 
 export default async function MoviesPage() {
@@ -38,7 +47,7 @@ export default async function MoviesPage() {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {movies.map((movie: any) => (
+            {movies.map((movie: Movie) => (
               <TableRow key={movie.id}>
                 <TableCell className="font-medium">{movie.id}</TableCell>
                 <TableCell>{movie.title}</TableCell>

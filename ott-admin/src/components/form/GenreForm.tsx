@@ -84,7 +84,7 @@ export default function GenreForm({ genre }: GenreFormProps) {
         router.push('/genres');
       }
       else {
-        let errorMessage = await response.json();
+        const errorMessage = await response.json();
         toast.error("Failed to delete genre: " + errorMessage.error);
         console.error('Error deleting genre:', errorMessage.error);
       }
@@ -96,7 +96,7 @@ export default function GenreForm({ genre }: GenreFormProps) {
     }
   }
 
-  const watchIsChanged = (field: any) => (
+  const watchIsChanged = (field: keyof GenreFormData) => (
     // if edit mode, check if watched value is different from genre's field value
     // otherwise check if watched value is not empty
     watch(field) !== (genre?.[field as keyof GenreFormData] || "") && <ChangeMark />

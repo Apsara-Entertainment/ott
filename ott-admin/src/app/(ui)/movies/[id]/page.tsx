@@ -6,9 +6,13 @@ async function getMovie(id: string) {
   return res.json();
 }
 
-export default async function EditMoviePage({ params }: { params: { id: string } }) {
-  params = await params;
-  const movie = await getMovie(params.id);
+interface EditMoviePageProps {
+  id: string
+}
+
+export default async function EditMoviePage({ params }: { params: Promise<EditMoviePageProps> }) {
+  const { id } = await params;
+  const movie = await getMovie(id);
 
   // if movie object contains error key
   if (movie.error) {

@@ -9,7 +9,7 @@ export async function GET() {
       },
       orderBy: { id: 'desc' },
     });
-    let moviesCorrected = movies.map((movie) => ({
+    const moviesCorrected = movies.map((movie) => ({
       ...movie,
       releaseDate: movie.releaseDate.toISOString().substring(0, 10),
     }));

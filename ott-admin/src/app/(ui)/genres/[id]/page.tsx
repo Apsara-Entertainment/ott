@@ -6,9 +6,13 @@ async function getGenre(id: string) {
   return res.json();
 }
 
-export default async function EditGenrePage({ params }: { params: { id: string } }) {
-  params = await params;
-  const genre = await getGenre(params.id);
+interface EditGenrePageProps {
+  id: string
+}
+
+export default async function EditGenrePage({ params }: { params: Promise<EditGenrePageProps> }) {
+  const { id } = await params;
+  const genre = await getGenre(id);
 
   // if genre object contains error key
   if (genre.error) {

@@ -1,17 +1,21 @@
 import { NextResponse } from 'next/server';
 import prisma from '@prisma/prismaClient';
 
-export async function GET(request: Request, { params }: { params: { id: string } }) {
-  params = await params;
+interface MovieApiProps {
+  id: string
+}
+
+export async function GET(request: Request, { params }: { params: Promise<MovieApiProps> }) {
+  const { id } = await params;
   try {
     const movie = await prisma.movie.findUnique({
-      where: { id: parseInt(params.id) },
+      where: { id: parseInt(id) },
       include: { genre: true },
     });
     if (!movie) {
       return NextResponse.json({ error: 'Movie not found' }, { status: 404 });
     }
-    let movieCorrected = {
+    const movieCorrected = {
       ...movie,
       releaseDate: movie.releaseDate.toISOString().substring(0, 10),
     }
@@ -22,12 +26,12 @@ export async function GET(request: Request, { params }: { params: { id: string }
   }
 }
 
-export async function PUT(request: Request, { params }: { params: { id: string } }) {
-  params = await params;
+export async function PUT(request: Request, { params }: { params: Promise<MovieApiProps> }) {
+  const { id } = await params;
   try {
     const data = await request.json();
     const movie = await prisma.movie.update({
-      where: { id: parseInt(params.id) },
+      where: { id: parseInt(id) },
       data: {
         title: data.title,
         description: data.description,
@@ -47,11 +51,11 @@ export async function PUT(request: Request, { params }: { params: { id: string }
   }
 }
 
-export async function DELETE(request: Request, { params }: { params: { id: string } }) {
-  params = await params;
+export async function DELETE(request: Request, { params }: { params: Promise<MovieApiProps> }) {
+  const { id } = await params;
   try {
     const movie = await prisma.movie.delete({
-      where: { id: parseInt(params.id) },
+      where: { id: parseInt(id) },
     });
     return NextResponse.json(movie, { status: 200 });
   } catch (error) {

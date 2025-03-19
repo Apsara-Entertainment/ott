@@ -1,4 +1,3 @@
-import { UserCircle2 } from "lucide-react";
 import { SidebarTrigger } from "../ui/sidebar";
 
 export function AppHeader() {

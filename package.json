@@ -1,6 +1,11 @@
 {
   "name": "ott",
   "private": true,
+  "scripts": {
+    "prisma:generate": "prisma generate",
+    "prisma:migrate": "prisma migrate deploy",
+    "prisma:studio": "prisma studio"
+  },
   "workspaces": [
     "ott-admin",
     "ott-web",

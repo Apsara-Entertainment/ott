@@ -1,11 +1,15 @@
 import { NextResponse } from 'next/server';
 import prisma from '@prisma/prismaClient';
 
-export async function GET(request: Request, { params }: { params: { id: string } }) {
-  params = await params;
+interface GenreApiProps {
+  id: string
+}
+
+export async function GET(request: Request, { params }: { params: Promise<GenreApiProps> }) {
+  const { id } = await params;
   try {
     const genre = await prisma.genre.findUnique({
-      where: { id: parseInt(params.id) },
+      where: { id: parseInt(id) },
     });
     if (!genre) {
       return NextResponse.json({ error: 'Genre not found' }, { status: 404 });
@@ -17,12 +21,12 @@ export async function GET(request: Request, { params }: { params: { id: string }
   }
 }
 
-export async function PUT(request: Request, { params }: { params: { id: string } }) {
-  params = await params;
+export async function PUT(request: Request, { params }: { params: Promise<GenreApiProps> }) {
+  const { id } = await params;
   try {
     const data = await request.json();
     const genre = await prisma.genre.update({
-      where: { id: parseInt(params.id) },
+      where: { id: parseInt(id) },
       data,
     });
     return NextResponse.json(genre, { status: 200 });
@@ -32,17 +36,17 @@ export async function PUT(request: Request, { params }: { params: { id: string }
   }
 }
 
-export async function DELETE(request: Request, { params }: { params: { id: string } }) {
-  params = await params;
+export async function DELETE(request: Request, { params }: { params: Promise<GenreApiProps> }) {
+  const { id } = await params;
   const movie = await prisma.movie.findFirst({
-    where: { genreId: parseInt(params.id) },
+    where: { genreId: parseInt(id) },
   });
   if (movie) {
     return NextResponse.json({ error: 'Genre is associated with movies' }, { status: 400 });
   }
   try {
     const genre = await prisma.genre.delete({
-      where: { id: parseInt(params.id) },
+      where: { id: parseInt(id) },
     });
     return NextResponse.json(genre, { status: 200 });
   } catch (error) {

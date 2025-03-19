@@ -51,9 +51,9 @@ export default function MovieForm({ movie }: MovieFormProps) {
   const [videoUrl, setVideoUrl] = useState("");
   const [imageUrl, setImageUrl] = useState("");
 
-  const handleGenreChange = (value: string) => {
+  function handleGenreChange(value: string) {
     setSelectedGenre(value);
-    let genreId = genres.find((g) => g.name === value)?.id || 0;
+    const genreId = genres.find((g) => g.name === value)?.id || 0;
     setValue("genreId", genreId, { shouldValidate: true });
   };
 
@@ -85,10 +85,12 @@ export default function MovieForm({ movie }: MovieFormProps) {
 
   useEffect(() => {
     if (movie) {
-      let genreName = genres.find((g) => g.id === movie.genreId)?.name || '';
+      const genreName = genres.find((g) => g.id === movie.genreId)?.name || '';
+      // TODO: remove the eslint-disable
+      // eslint-disable-next-line react-hooks/exhaustive-deps
       handleGenreChange(genreName);
     }
-  }, [genres]);
+  }, [genres, movie]);
 
   const onSubmit = async (data: MovieFormData) => {
     setLoading(true);
@@ -130,7 +132,7 @@ export default function MovieForm({ movie }: MovieFormProps) {
         router.push('/movies');
       }
       else {
-        let errorMessage = await response.json();
+        const errorMessage = await response.json();
         toast.error("Failed to delete movie: " + errorMessage.error);
         console.error('Error deleting movie:', errorMessage.error);
       }
@@ -142,23 +144,21 @@ export default function MovieForm({ movie }: MovieFormProps) {
     }
   }
 
-  const watchIsChanged = (field: any) => (
+  const watchIsChanged = (field: keyof MovieFormData) => (
     // if edit mode, check if watched value is different from movie's field value
     // otherwise check if watched value is not empty
     watch(field) !== (movie?.[field as keyof MovieFormData] || "") && <ChangeMark />
   );
 
   const videoUploaderSetVideoUrl = (url: string) => {
+    setVideoUrl(url);
     setValue('videoUrl', url);
   }
 
   const imageUploaderSetImageUrl = (url: string) => {
+    setImageUrl(url);
     setValue('posterUrl', url);
   }
-
-  useEffect(() => {
-    console.log(process.env.NEXT_PUBLIC_CDN_URL + watch('posterUrl'))
-  }, [watch('posterUrl')])
 
   return (
     <>
