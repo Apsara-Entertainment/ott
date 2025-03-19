@@ -44,4 +44,4 @@ jobs:
           npm install
           npm run build
       - name: Deploy Project Artifacts to Vercel
-        run: vercel deploy --prebuilt
+        run: vercel deploy --prebuilt --environment=${{ github.event.inputs.environment }} --token=${{ secrets.VERCEL_TOKEN }}
