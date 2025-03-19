@@ -1,0 +1,16 @@
+version: '3.8'
+
+services:
+  minio:
+    image: minio/minio:latest
+    container_name: ott-minio
+    environment:
+      - MINIO_API_REQUESTTIMESKEW=86400
+    ports:
+      - "9000:9000" # MinIO S3 API
+      - "9001:9001" # MinIO Console (web UI)
+    volumes:
+      - ./minio-data:/data
+      - /etc/localtime:/etc/localtime:ro
+    command: server /data --console-address ":9001" --anonymous
+    restart: unless-stopped

@@ -1,0 +1,91 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider   = "prisma-client-js"
+  engineType = "library"
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  email     String   @unique
+  name      String?
+  dob       DateTime
+  age       Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// TODO: Add a uuid field for routes
+model Genre {
+  id   Int    @id @default(autoincrement())
+  name String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  movies Movie[]
+  Series Series[]
+}
+
+// TODO: Change releaseDate to Date - looks like not possible
+model Movie {
+  id          Int      @id @default(autoincrement())
+  title       String
+  description String
+  releaseDate DateTime
+  posterUrl   String
+  videoUrl    String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  genreId Int
+  genre   Genre @relation(fields: [genreId], references: [id])
+
+  metaTitle       String?
+  metaDescription String?
+  metaKeywords    String?
+}
+
+model Series {
+  id          Int      @id @default(autoincrement())
+  title       String
+  description String
+  releaseDate DateTime
+  posterUrl   String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  episodes Episode[]
+  genreId  Int
+  genre    Genre     @relation(fields: [genreId], references: [id])
+
+  metaTitle       String?
+  metaDescription String?
+  metaKeywords    String?
+}
+
+model Episode {
+  id          Int      @id @default(autoincrement())
+  title       String
+  description String
+  season      Int
+  episodeNo   Int
+  releaseDate DateTime
+  posterUrl   String
+  videoUrl    String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  seriesId Int
+  series   Series @relation(fields: [seriesId], references: [id])
+
+  metaTitle       String?
+  metaDescription String?
+  metaKeywords    String?
+}
