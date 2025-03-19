@@ -6,6 +6,9 @@
     "prisma:migrate": "prisma migrate deploy",
     "prisma:studio": "prisma studio"
   },
+  "prisma": {
+    "schema": "libs/prisma/schema.prisma"
+  },
   "workspaces": [
     "ott-admin",
     "ott-web",
